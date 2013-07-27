@@ -56,7 +56,7 @@ class Watermark
       flush "Writing watermarked file locally: #{watermarked_local_file}"
 
       save_watermarked_file(watermarked_local_file)
-      REDIS.incr s3_watermarked_key
+      redis.incr(s3_watermarked_key)
     end 
   end
 
@@ -66,7 +66,7 @@ class Watermark
       :body   => File.open(watermarked_local_file),
       :public => true
     )
-    REDIS.lpush(watermarked_url_list, watermarked_file_token.public_url)
+    redis.lpush(watermarked_url_list, watermarked_file_token.public_url)
     flush "Persisted watermarked file to S3: #{watermarked_file_token.public_url}"
   end
 

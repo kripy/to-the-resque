@@ -21,7 +21,7 @@ class App < Sinatra::Base
     Resque.redis = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
     Resque.redis.namespace = "resque:example"
     REDIS = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
-    #set :redis, ENV["REDISTOGO_URL"]
+    set :redis, ENV["REDISTOGO_URL"]
   end
 
   register Sinatra::AssetPack
@@ -70,10 +70,10 @@ class App < Sinatra::Base
   end   
 
   get "/" do
-    @local_uploads = REDIS.get(local_uploads_key)
-    @s3_originals = REDIS.get(s3_originals_key)
-    @s3_watermarked = REDIS.get(s3_watermarked_key)
-    @watermarked_urls = REDIS.lrange(watermarked_url_list, 0, 4)
+    @local_uploads = redis.get(local_uploads_key)
+    @s3_originals = redis.get(s3_originals_key)
+    @s3_watermarked = redis.get(s3_watermarked_key)
+    @watermarked_urls = redis.lrange(watermarked_url_list, 0, 4)
     @working = Resque.working
 
     mustache :index
@@ -83,7 +83,7 @@ class App < Sinatra::Base
     unless params['file'][:tempfile].nil?
       tmpfile = params['file'][:tempfile]
       name = params['file'][:filename]
-      REDIS.incr(local_uploads_key)
+      redis.incr(local_uploads_key)
       file_token = send_to_s3(tmpfile, name)
       Resque.enqueue(Watermark, file_token.key)
     end
@@ -104,7 +104,7 @@ class App < Sinatra::Base
       :public => true
     )
     
-    REDIS.incr(s3_originals_key)
+    redis.incr(s3_originals_key)
     file_token
   end
 end
