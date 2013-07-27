@@ -17,12 +17,10 @@ class App < Sinatra::Base
   set :root, base
 
   configure do
-    redisUri = ENV["REDISTOGO_URL"]
-    puts redisUri
-    uri = URI.parse(redisUri)
+    uri = URI.parse(ENV["REDISTOGO_URL"])
     Resque.redis = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
     Resque.redis.namespace = "resque:example"
-    set :redis, redisUri
+    set :redis, ENV["REDISTOGO_URL"]
   end
 
   register Sinatra::AssetPack
