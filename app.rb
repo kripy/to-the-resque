@@ -83,7 +83,7 @@ class App < Sinatra::Base
     unless params['file'][:tempfile].nil?
       tmpfile = params['file'][:tempfile]
       name = params['file'][:filename]
-      redis.incr local_uploads_key
+      REDIS.incr(local_uploads_key)
       file_token = send_to_s3(tmpfile, name)
       Resque.enqueue(Watermark, file_token.key)
     end

@@ -1,6 +1,7 @@
 # Heroku Resque Example
 
 curl -F "file=@src.jpeg" "http://localhost:5000/upload"
+curl -F "file=@src.jpeg" "http://localhost:5000/upload"
 
 ## Installation
 
