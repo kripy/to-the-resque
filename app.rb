@@ -17,7 +17,7 @@ class App < Sinatra::Base
   set :root, base
 
   configure do
-    redisUri = ENV["REDISTOGO_URL"] || "redis://localhost:6379"
+    redisUri = ENV["REDISTOGO_URL"]
     puts redisUri
     uri = URI.parse(redisUri)
     Resque.redis = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
@@ -86,7 +86,6 @@ class App < Sinatra::Base
       name = params['file'][:filename]
       redis.incr local_uploads_key
       file_token = send_to_s3(tmpfile, name)
-      puts file_token
       Resque.enqueue(Watermark, file_token.key)
     end
   end
@@ -107,7 +106,6 @@ class App < Sinatra::Base
     )
     
     redis.incr s3_originals_key
-    puts s3_originals_key
     file_token
   end
 end
