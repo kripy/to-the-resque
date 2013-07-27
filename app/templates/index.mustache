@@ -1,2 +1,4 @@
 <h1><a href="/resque">Resque Dashboard</a></h1>
 <h1>{{local_uploads}} local uploads, {{s3_originals}} S3 originals, {{s3_watermarked}} watermarked.</h1>
+<h2>Recently watermarked images</h2>
+<ul>{{#watermarked_urls}}<li><a href="{{.}}">{{.}}</a></li>{{/watermarked_urls}}</ul>

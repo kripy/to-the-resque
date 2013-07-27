@@ -16,7 +16,6 @@ class Watermark
   @queue = :watermark
 
   def initialize(key)
-    puts "initialize"
     @connection = get_connection
     @originals_directory = connection.directories.get(ENV['AWS_S3_BUCKET_ORIGINALS'])
     @watermarked_directory = connection.directories.get(ENV['AWS_S3_BUCKET_WATERMARKED'])
@@ -26,7 +25,6 @@ class Watermark
   end
 
   def get_connection
-    puts "get_connection"
     conn = Fog::Storage.new({
       :provider => 'AWS',
       :aws_access_key_id => ENV['AWS_ACCESS_KEY_ID'],
@@ -35,16 +33,12 @@ class Watermark
   end
 
   def self.perform(key)
-    puts "self.perform"
-    
     (new key).apply_watermark
     rescue Resque::TermException
     Resque.enqueue(self, key)
   end
 
   def apply_watermark
-    puts "apply_watermark"
-
     Dir.mktmpdir do |tmpdir|
       tmpfile = File.join(tmpdir, @original_file.key)
 
@@ -67,9 +61,7 @@ class Watermark
   end
 
   def save_watermarked_file(watermarked_local_file)
-    puts "save_watermark"
-
-    watermarked_file_token = @watermarked_directory.files.create(
+      watermarked_file_token = @watermarked_directory.files.create(
       :key    => @original_file.key,
       :body   => File.open(watermarked_local_file),
       :public => true
