@@ -1,6 +1,9 @@
 require 'bundler/setup'
 Bundler.require(:default)
 
+require File.expand_path('../lib/watermark', __FILE__)
+require File.expand_path('../lib/redis_keys', __FILE__)
+
 require 'sinatra/base'
 require 'sinatra/assetpack'
 require 'sinatra/support'
@@ -9,15 +12,13 @@ require 'compass-h5bp'
 require 'mustache/sinatra'
 require 'sinatra/redis'
 
-require File.expand_path('../lib/watermark', __FILE__)
-require File.expand_path('../lib/redis_keys', __FILE__)
-
 class App < Sinatra::Base
   base = File.dirname(__FILE__)
   set :root, base
 
   configure do
     uri = URI.parse(ENV["REDISTOGO_URL"])
+    puts uri
     Resque.redis = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
     Resque.redis.namespace = "resque:example"
     set :redis, ENV["REDISTOGO_URL"]
