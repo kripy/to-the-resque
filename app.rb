@@ -70,10 +70,10 @@ class App < Sinatra::Base
   end   
 
   get "/" do
-    @local_uploads = redis.get(local_uploads_key)
-    @s3_originals = redis.get(s3_originals_key)
-    @s3_watermarked = redis.get(s3_watermarked_key)
-    @watermarked_urls = redis.lrange(watermarked_url_list, 0, 4)
+    #@local_uploads = redis.get(local_uploads_key)
+    #@s3_originals = redis.get(s3_originals_key)
+    #@s3_watermarked = redis.get(s3_watermarked_key)
+    #@watermarked_urls = redis.lrange(watermarked_url_list, 0, 4)
     @working = Resque.working
 
     mustache :index
