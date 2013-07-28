@@ -73,7 +73,6 @@ class App < Sinatra::Base
   end   
 
   get "/" do
-    puts redis
     @local_uploads = REDIS.get(local_uploads_key)
     @s3_originals = REDIS.get(s3_originals_key)
     @s3_watermarked = REDIS.get(s3_watermarked_key)
