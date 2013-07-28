@@ -21,7 +21,10 @@ class App < Sinatra::Base
     puts uri
     Resque.redis = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
     Resque.redis.namespace = "resque:example"
-    set :redis, ENV["REDISTOGO_URL"]
+    # This line errors our on Heroku.
+    #set :redis, ENV["REDISTOGO_URL"]
+    # Create another Redis connection.
+    REDIS = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
   end
 
   register Sinatra::AssetPack
@@ -71,10 +74,10 @@ class App < Sinatra::Base
 
   get "/" do
     puts redis
-    #@local_uploads = redis.get(local_uploads_key)
-    #@s3_originals = redis.get(s3_originals_key)
-    #@s3_watermarked = redis.get(s3_watermarked_key)
-    #@watermarked_urls = redis.lrange(watermarked_url_list, 0, 4)
+    @local_uploads = REDIS.get(local_uploads_key)
+    @s3_originals = REDIS.get(s3_originals_key)
+    @s3_watermarked = REDIS.get(s3_watermarked_key)
+    @watermarked_urls = REDIS.lrange(watermarked_url_list, 0, 4)
     @working = Resque.working
 
     mustache :index
@@ -84,7 +87,7 @@ class App < Sinatra::Base
     unless params['file'][:tempfile].nil?
       tmpfile = params['file'][:tempfile]
       name = params['file'][:filename]
-      redis.incr(local_uploads_key)
+      REDIS.incr(local_uploads_key)
       file_token = send_to_s3(tmpfile, name)
       Resque.enqueue(Watermark, file_token.key)
     end
@@ -105,7 +108,7 @@ class App < Sinatra::Base
       :public => true
     )
     
-    redis.incr(s3_originals_key)
+    REDIS.incr(s3_originals_key)
     file_token
   end
 end
