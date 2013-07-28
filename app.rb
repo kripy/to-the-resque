@@ -22,7 +22,6 @@ class App < Sinatra::Base
     Resque.redis = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
     Resque.redis.namespace = "resque:example"
     set :redis, ENV["REDISTOGO_URL"]
-    puts :redis
   end
 
   register Sinatra::AssetPack
@@ -71,6 +70,7 @@ class App < Sinatra::Base
   end   
 
   get "/" do
+    puts redis
     #@local_uploads = redis.get(local_uploads_key)
     #@s3_originals = redis.get(s3_originals_key)
     #@s3_watermarked = redis.get(s3_watermarked_key)
