@@ -1,7 +1,10 @@
-# Heroku Resque Example
+# Kripy: To The Resque
 
-curl -F "file=@src.jpeg" "http://localhost:5000/upload"
-curl -F "file=@src.jpeg" "http://localhost:5000/upload"
+Okay. I've always wanted to play around with background jobs so, as with all my stuff, I looked for something that I could easily deploy to Heroku. I found Trineo's [Resque example](https://github.com/trineo/resque-example) and, after a fare amount of wrangling, managed to get it going. Thing was: I only wanted this to work on a single dyno. As it turns out, Unicorn allows you to get a couple of workers running. I think. Either that or I'm going to cop a charge from Heroku.
+
+# Warning
+
+A couple of things.
 
 ## Installation
 

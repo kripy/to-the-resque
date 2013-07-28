@@ -15,10 +15,8 @@ class Watermark
   attr_reader :originals_directory, :watermarked_directory, :connection, :original_file
   @queue = :watermark
 
-  uri = URI.parse(ENV["REDISTOGO_URL"])
-  REDIS = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
-
-  puts uri
+  #uri = URI.parse(ENV["REDISTOGO_URL"])
+  #REDIS = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
 
   def initialize(key)
     @connection = get_connection
@@ -61,7 +59,7 @@ class Watermark
       flush "Writing watermarked file locally: #{watermarked_local_file}"
 
       save_watermarked_file(watermarked_local_file)
-      REDIS.incr(s3_watermarked_key)
+      redis.incr(s3_watermarked_key)
     end 
   end
 
@@ -71,7 +69,7 @@ class Watermark
       :body   => File.open(watermarked_local_file),
       :public => true
     )
-    REDIS.lpush(watermarked_url_list, watermarked_file_token.public_url)
+    redis.lpush(watermarked_url_list, watermarked_file_token.public_url)
     flush "Persisted watermarked file to S3: #{watermarked_file_token.public_url}"
   end
 
