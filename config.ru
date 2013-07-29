@@ -2,5 +2,5 @@ require './app'
 require 'resque/server'
 
 run Rack::URLMap.new \
-  "/"       => App.new,
+  "/"       => Sinatra::Application,
   "/resque" => Resque::Server.new

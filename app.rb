@@ -26,7 +26,7 @@ class App < Sinatra::Base
     puts :redis
 
     # Create another Redis connection.
-    REDIS = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
+    #REDIS = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
   end
 
   register Sinatra::AssetPack
@@ -76,7 +76,7 @@ class App < Sinatra::Base
 
   get "/" do
     @local_uploads = redis.get(local_uploads_key)
-    
+
     @s3_originals = REDIS.get(s3_originals_key)
     @s3_watermarked = REDIS.get(s3_watermarked_key)
     @watermarked_urls = REDIS.lrange(watermarked_url_list, 0, 4)
