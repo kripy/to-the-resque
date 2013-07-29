@@ -1,16 +1,16 @@
-require 'bundler/setup'
+require "bundler/setup"
 Bundler.require(:default)
 
-require File.expand_path('../lib/watermark', __FILE__)
-require File.expand_path('../lib/redis_keys', __FILE__)
+require File.expand_path("../lib/watermark", __FILE__)
+require File.expand_path("../lib/redis_keys", __FILE__)
 
-require 'sinatra/base'
-require 'sinatra/assetpack'
-require 'sinatra/support'
-require 'compass'
-require 'compass-h5bp'
-require 'mustache/sinatra'
-require 'sinatra/redis'
+require "sinatra/base"
+require "sinatra/assetpack"
+require "sinatra/support"
+require "compass"
+require "compass-h5bp"
+require "mustache/sinatra"
+require "sinatra/redis"
 
 class App < Sinatra::Base
   base = File.dirname(__FILE__)
@@ -18,11 +18,13 @@ class App < Sinatra::Base
 
   configure do
     uri = URI.parse(ENV["REDISTOGO_URL"])
-    puts uri
     Resque.redis = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
     Resque.redis.namespace = "resque:example"
-    # This line errors our on Heroku.
-    #set :redis, ENV["REDISTOGO_URL"]
+    
+    # This line errors.
+    set :redis, ENV["REDISTOGO_URL"]
+    puts :redis
+
     # Create another Redis connection.
     REDIS = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
   end
@@ -73,7 +75,8 @@ class App < Sinatra::Base
   end   
 
   get "/" do
-    @local_uploads = REDIS.get(local_uploads_key)
+    @local_uploads = redis.get(local_uploads_key)
+    
     @s3_originals = REDIS.get(s3_originals_key)
     @s3_watermarked = REDIS.get(s3_watermarked_key)
     @watermarked_urls = REDIS.lrange(watermarked_url_list, 0, 4)
