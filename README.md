@@ -1,19 +1,8 @@
 # Kripy: To The Resque
 
-Okay. I've always wanted to play around with background jobs so, as with all my stuff, I looked for something that I could easily deploy to Heroku. I found Trineo's [Resque example](https://github.com/trineo/resque-example) and, after a fare amount of wrangling, managed to get it going. Thing was: I only wanted this to work on a single dyno. As it turns out, Unicorn allows you to get a couple of workers running. I think. Either that or I'm going to cop a charge from Heroku.
+Okay. I've always wanted to play around with background jobs so, as with all my stuff, I looked for something that I could easily deploy to Heroku. I found Trineo's [Resque example](https://github.com/trineo/resque-example) and, after a fare amount of wrangling, managed to get it going. Thing was: I only wanted this to work on a single dyno. As it turns out, Unicorn allows you to get a couple of workers running. I think. Either that or I'm going to cop a charge (not) from Heroku.
 
-# Things To Note
-
-A couple of things.
-
-## Installation
-
-Firstly, make sure you've [installed Ruby](http://www.ruby-lang.org/en/). Also, install the [Heroku Toolbelt](https://toolbelt.heroku.com/) as it includes [Foreman](https://github.com/ddollar/foreman) for running Procfile-based applications.
-
-## Deployment
-
-## Usage
-curl -F "file=@src.jpeg" "http://appname.herokuapp.com/upload"
+This is a work in progress.
 
 ## MIT LICENSE
 
