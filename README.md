@@ -1,8 +1,8 @@
-# Kripy: To The Resque
+# To The Resque
 
 Okay. I've always wanted to play around with background jobs so, as with all my stuff, I looked for something that I could easily deploy to Heroku. I found Trineo's [Resque example](https://github.com/trineo/resque-example) and, after a fare amount of wrangling, managed to get it going. Thing was: I only wanted this to work on a single dyno. As it turns out, Unicorn allows you to get a couple of workers running. I think. Either that or I'm going to cop a charge (not) from Heroku.
 
-This is a work in progress.
+This is a work in progress. I've been having a [few issues](https://github.com/kripy/redis-symbol) with the Sinatra Redis gem so looking at pulling it out and using the [Redis](https://github.com/redis/redis-rb) gem.
 
 ## MIT LICENSE
 
