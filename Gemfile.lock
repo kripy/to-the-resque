@@ -89,6 +89,7 @@ DEPENDENCIES
   mini_magick
   mustache
   rake
+  redis
   resque (= 1.24.1)
   sinatra
   sinatra-assetpack

@@ -7,10 +7,10 @@ require File.expand_path("../lib/redis_keys", __FILE__)
 require "sinatra/base"
 require "sinatra/assetpack"
 require "sinatra/support"
+require "sinatra/redis"
 require "compass"
 require "compass-h5bp"
 require "mustache/sinatra"
-require "sinatra/redis"
 
 class App < Sinatra::Base
   base = File.dirname(__FILE__)
@@ -21,12 +21,10 @@ class App < Sinatra::Base
     Resque.redis = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
     Resque.redis.namespace = "resque:example"
     
-    # This line errors.
-    set :redis, ENV["REDISTOGO_URL"]
-    puts :redis
-
-    # Create another Redis connection.
-    #REDIS = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
+    # This line errors out on Heroku.
+    # Works okay locally.
+    #set :redis, ENV["REDISTOGO_URL"]
+    REDIS = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
   end
 
   register Sinatra::AssetPack
@@ -75,8 +73,7 @@ class App < Sinatra::Base
   end   
 
   get "/" do
-    @local_uploads = redis.get(local_uploads_key)
-
+    @local_uploads = REDIS.get(local_uploads_key)
     @s3_originals = REDIS.get(s3_originals_key)
     @s3_watermarked = REDIS.get(s3_watermarked_key)
     @watermarked_urls = REDIS.lrange(watermarked_url_list, 0, 4)
